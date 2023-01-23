@@ -1,6 +1,8 @@
 
 /*
-to use this for testinf you must install mosquitto in desktop and run this c@=#
+NOte :!!!!
+to use this for testinf you must install mosquitto broker in desktop and run this c@=# app
+make sure the broker is running in services!!!
 
 
 */
