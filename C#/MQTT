@@ -1,3 +1,10 @@
+
+/*
+to use this for testinf you must install mosquitto in desktop and run this c@=#
+
+
+*/
+
 using System.Text;
 using System.Windows.Forms;
 using uPLibrary.Networking.M2Mqtt;
@@ -20,7 +27,8 @@ namespace WinFormsApp1
             {
                 // mqttClient = new MqttClient("127.0.0.1");//ok working
                 // mqttClient = new MqttClient("test.mosquitto.org"); //ok working
-                mqttClient = new MqttClient("broker.hivemq.com");//working ok
+                //mqttClient = new MqttClient("broker.hivemq.com");//working ok
+                mqttClient = new MqttClient("mqtt.eclipseprojects.io");//ok working and tested in mobile phone EasyMQTT app
                 mqttClient.MqttMsgPublishReceived += MqttClient_MqttMsgPublishReceived;
                // mqttClient.Subscribe(new string[] { "Application2/Message" }, new byte[] { MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE });
                 mqttClient.Connect("Application1");
