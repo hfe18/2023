@@ -95,6 +95,7 @@ public partial class MainPage : ContentPage
 
         
         timer.Start();
+	 CounterBtn.IsEnabled = false; //DISABLE THE BUTTON USING ITS NAME
        
         //Trace.WriteLine("test");        //mqtt here
         if (e2.IsVisible == true)
