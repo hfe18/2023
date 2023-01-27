@@ -1,0 +1,136 @@
+//success rx/tx
+
+using Microsoft.Maui.Controls.Shapes;
+using uPLibrary.Networking.M2Mqtt.Messages;
+using uPLibrary.Networking.M2Mqtt;
+using System.Text;
+using Microsoft.Maui.ApplicationModel;
+using System.Net.Security;
+using Microsoft.VisualBasic;
+using System.Diagnostics;
+
+//use this link
+//https://gist.github.com/cwschroeder/7b5117dca561c01def041e7d4c6d2771
+
+namespace MauiApp7;
+
+public partial class MainPage : ContentPage
+{
+	int count = 0;
+	MqttClient client;
+    string clientId;
+    IDispatcherTimer timer;
+    
+	public MainPage()
+	{
+		InitializeComponent();
+        
+
+        string BrokerAddress = "mqtt.eclipseprojects.io";// "test.mosquitto.org";
+        client= new MqttClient(BrokerAddress);
+
+        // register a callback-function (we have to implement, see below) which is called by the library when a message was received
+        client.Subscribe(new string[] { "Application2/Message" }, new byte[] { MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE });
+        client.MqttMsgPublishReceived += client_MqttMsgPublishReceived;
+
+        clientId =Guid.NewGuid().ToString(); 
+        client.Connect(clientId);
+
+        timer = Dispatcher.CreateTimer();
+        timer.Interval=TimeSpan.FromSeconds(1);
+        timer.Tick += (s, e) => DoSomething();
+       
+       
+
+    }
+
+    void DoSomething()
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+
+            Random rd = new Random();
+
+            int rand_num = rd.Next(10, 2200);
+
+            Console.WriteLine(rand_num);
+
+            //mqtt
+
+            string Topic = "PTA10/payload";
+
+            // publish a message with QoS 2
+            client.Publish(Topic, Encoding.UTF8.GetBytes(rand_num.ToString()), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, true);
+
+
+
+
+
+
+        });
+    }
+
+    
+    void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
+    {
+        string ReceivedMessage = Encoding.UTF8.GetString(e.Message);
+       
+
+        MainThread.BeginInvokeOnMainThread(()=>
+        //Device.BeginInvokeOnMainThread(() =>
+        {
+            Label1.Text = ReceivedMessage;
+            //debug windows
+            Debug.WriteLine(ReceivedMessage);
+        });
+
+
+        
+        
+    }
+
+    
+    private  void OnCounterClicked(object sender, EventArgs e)
+	{
+
+        
+        timer.Start();
+       
+        //Trace.WriteLine("test");        //mqtt here
+        if (e2.IsVisible == true)
+        {
+
+            e2.IsVisible = false;
+        }
+
+        else
+        {
+            e2.IsVisible = true;// false;
+        }
+
+        if (e1.IsVisible == true)
+        {
+
+            e1.IsVisible = false;
+        }
+
+        else
+        {
+            e1.IsVisible = true;// false;
+        }
+
+
+
+        
+
+        count++;
+		
+		if (count == 1)
+			CounterBtn.Text = $"Clicked {count} time";
+		else
+			CounterBtn.Text = $"Clicked {count} times";
+
+		SemanticScreenReader.Announce(CounterBtn.Text);
+	}
+}
+
